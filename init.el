@@ -233,6 +233,7 @@ BUFFER may be either a buffer or its name (a string)."
 (setq auto-save-file-name-transforms
       '((".*" "~/.emacs.d/autosave/" t)))
 
+;; Do some ibuffer modifications
 (setq ibuffer-show-empty-filter-groups nil)
 (setq ibuffer-saved-filter-groups
     '(("home"
@@ -263,6 +264,19 @@ BUFFER may be either a buffer or its name (a string)."
 	     (ibuffer-auto-mode 1)
 	     (ibuffer-switch-to-saved-filter-groups "home")))
         
+;; nearly all of this is the default layout
+(setq ibuffer-formats 
+      '((mark modified read-only " "
+              (name 35 35 :left :elide) ; change: 30s were originally 18s
+              " "
+              (size 9 -1 :right)
+              " "
+              (mode 20 20 :left :elide)
+              " " filename-and-process)
+        (mark " "
+              (name 16 -1)
+              " " filename)))
+
 ;; ;; Adds functionality to ibuffer for grouping buffers by their TRAMP
 ;; ;; connection.
 ;; ;;
