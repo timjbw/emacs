@@ -36,6 +36,17 @@
 (require 'evernote-mode)
 (define-key global-map (kbd "C-c C-e") 'evernote-browsing-list-notebooks)
 
+;; Removed evernote dev toekn from init.el, so check token is set when startint evernote-mode
+;; dev token is set in emacs-tips.org
+(defun test-evernote-dev-token()
+  "Check whether an Evernote developer token is set when starting evernote-mode"
+  (when (eq major-mode 'evernote-mode)
+    (unless (boundp 'evernote-developer-token)
+      (progn
+        (message "Evernote developer token not set!")))))
+
+(add-hook 'evernote-mode 'test-evernote-dev-token)
+
 
 ;; Make dired+ re-use buffer for visited directories
 (require 'dired+)
