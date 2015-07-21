@@ -1,8 +1,22 @@
+;; Initial startup configuration
+;; Set up Emacs with no decorations
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+;; Set safe themes
+(setq custom-safe-themes t)
+(load-theme 'twilight t)
+;;(load-theme 'ample-flat t)
+;;(load-theme 'gotham t)
+
 ;; Add a few custom directories
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
-(add-to-list 'load-path "~/.emacs.d/ext")
-(add-to-list 'load-path "~/.emacs.d/evil")
+(add-to-list 'load-path "~/.emacs.d/ext/")
+(add-to-list 'load-path "~/.emacs.d/evil/")
+
+;; Load packages and initial config
 
 (require 'package)
 (add-to-list 'package-archives
@@ -15,44 +29,36 @@
 (define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
 (define-key global-map (kbd "C-c #") 'iedit-mode)
 
-(defun kill-buffer-and-its-windows (buffer)
-  "Kill BUFFER and delete its windows.  Default is `current-buffer'.
-BUFFER may be either a buffer or its name (a string)."
-  (interactive (list (read-buffer "Kill buffer: " (current-buffer) 'existing)))
-  (setq buffer  (get-buffer buffer))
-  (if (buffer-live-p buffer)            ; Kill live buffer only.
-      (let ((wins  (get-buffer-window-list buffer nil t))) ; On all frames.
-        (when (and (buffer-modified-p buffer)
-                   (fboundp '1on1-flash-ding-minibuffer-frame))
-          (1on1-flash-ding-minibuffer-frame t)) ; Defined in `oneonone.el'.
-        (when (kill-buffer buffer)      ; Only delete windows if buffer killed.
-          (dolist (win  wins)           ; (User might keep buffer if modified.)
-            (when (window-live-p win)
-              ;; Ignore error, in particular,
-              ;; "Attempt to delete the sole visible or iconified frame".
-              (condition-case nil (delete-window win) (error nil))))))
-    (when (interactive-p)
-      (error "Cannot kill buffer.  Not a live buffer: `%s'" buffer))))
+(require 'evil)
+(evil-mode 1)
+
+;; Load evernote-mode and map some keys
+(require 'evernote-mode)
+(define-key global-map (kbd "C-c C-e") 'evernote-browsing-list-notebooks)
+
+
+;; Make dired+ re-use buffer for visited directories
+(require 'dired+)
+(toggle-diredp-find-file-reuse-dir t)
+
+        
+;;(require 'epa-file)
+;;(epa-file-enable)
 
 
 (global-set-key (kbd "C-x k") 'kill-buffer-and-its-windows)
 
-(require 'evil)
-;;(require 'epa-file)
-;;(epa-file-enable)
 
-;;(require 'weatherline-mode)
+;;(nyan-mode 1)
 
-;; Set up Emacs with no decorations
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
+(minimap-mode 1)
+
 
 ;;Set tabstops
 (setq-default tab-width 4 indent-tabs-mode nil)
 ;;(setq-default indent-tabs-mode nil)
 ;;(setq-default tab-width 4)
-(setq indent-line-function 'insert-tab)
+;;(setq indent-line-function 'insert-tab)
 
 ;; Start Emacs maximised
 (custom-set-variables
@@ -66,9 +72,13 @@ BUFFER may be either a buffer or its name (a string)."
  '(evernote-developer-token
         "S=s132:U=120edf9:E=155e34130b2:C=14e8b9003a0:P=1cd:A=en-devtoken:V=2:H=ec5fb71b9bf4fe458050dbbb11c6cfdf")
  '(initial-frame-alist (quote ((fullscreen . maximized))))
+ '(minimap-highlight-line nil)
+ '(minimap-window-location (quote right))
+ '(nyan-mode t)
  '(org-mobile-directory "~/Dropbox/org")
  '(weatherline-location-id 2649800))
 
+        
 ;; Stop cursor from blinking
 (blink-cursor-mode 0)
 
@@ -81,13 +91,6 @@ BUFFER may be either a buffer or its name (a string)."
 ;; Set custom font
 (set-face-attribute 'default nil :height 100)
 
-;; Set theme
-;;(load-theme 'ample-flat t)
-;;(load-theme 'gotham t)
-
-;; Set safe themes
-(setq custom-safe-themes t)
-(load-theme 'twilight t)
 
 ;;(setq x-gtk-use-system-tooltips nil)
 
@@ -106,7 +109,8 @@ BUFFER may be either a buffer or its name (a string)."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(hl-line ((t (:inherit highlight :background "gray15")))))
+ '(hl-line ((t (:inherit highlight :background "gray15"))))
+ '(minimap-active-region-background ((t (:background "#222222")))))
 
 ;; Add line numbers
 (global-linum-mode t)
@@ -118,23 +122,26 @@ BUFFER may be either a buffer or its name (a string)."
 (global-set-key (kbd "C-x c y") 'clipboard-yank)
 (global-set-key (kbd "C-x c w") 'clipboard-kill-ring-save)
 
-;; Set key-s for moving between windows
+;; Set keys for moving between windows
 
-(global-set-key (kbd "C-x <right>") 'windmove-right)
-(global-set-key (kbd "C-x <left>") 'windmove-left)
-(global-set-key (kbd "C-x <up>")    'windmove-up)
-(global-set-key (kbd "C-x <down>")  'windmove-down)
+;(global-set-key (kbd "C-x <right>") 'windmove-right)
+;(global-set-key (kbd "C-x <left>") 'windmove-left)
+;(global-set-key (kbd "C-x <up>")    'windmove-up)
+;(global-set-key (kbd "C-x <down>")  'windmove-down)
 
-;;(global-set-key (kbd "C-x l") 'windmove-right)
-;;(global-set-key (kbd "C-x h") 'windmove-left)
-;;(global-set-key (kbd "C-x k")    'windmove-up)
-;;(global-set-key (kbd "C-x j")  'windmove-down)
+(global-set-key (kbd "C-x l") 'windmove-right)
+(global-set-key (kbd "C-x h") 'windmove-left)
+(global-set-key (kbd "C-x k")    'windmove-up)
+(global-set-key (kbd "C-x j")  'windmove-down)
+;; Rebind the rebound C-x h to C-x a to mark-whole-buffer    
+(global-set-key (kbd "C-x a")  'mark-whole-buffer)
 
 ;; Set keys for scrolling one page up and down
 (global-set-key (kbd "C-<up>") 'scroll-down-command)
     (global-set-key (kbd "C-<down>") 'scroll-up-command)
+
 ;; Open buffer list in active frame
-(global-set-key (kbd "C-x C-b") 'buffer-menu)
+;(global-set-key (kbd "C-x C-b") 'buffer-menu)
 
 ;; Set keys to toggle menu
 (global-set-key (kbd "C-c m")  'menu-bar-mode)
@@ -163,9 +170,6 @@ BUFFER may be either a buffer or its name (a string)."
 (setq ido-everywhere t)
 (ido-mode 1)
 
-;; Load evil-mode
-;;(require 'evil)
-(evil-mode 1)
 
 ;; Remap ESC to ';
 (setq key-chord-two-keys-delay 0.5)
@@ -189,11 +193,9 @@ BUFFER may be either a buffer or its name (a string)."
 ;;(setq evil-replace-state-cursor '("red" bar))
 ;;(setq evil-operator-state-cursor '("red" hollow))
 
-;; Make dired+ re-use buffer for visited directories
-(require 'dired+)
-(toggle-diredp-find-file-reuse-dir t)
 
-;;(require 'weatherline-mode)
+;; Bind some avy keys
+(global-set-key (kbd "C-;") 'avy-goto-char-2)
 
 ;; Enable smoother scrolling
 (setq scroll-margin 5 scroll-conservatively 9999 scroll-step 5)
@@ -201,7 +203,7 @@ BUFFER may be either a buffer or its name (a string)."
 (setq scroll-conservatively 10000)
 
 ;;Auto indent after CR
-(define-key global-map (kbd "RET") 'newline-and-indent)
+;(define-key global-map (kbd "RET") 'newline-and-indent)
 
 ;; Show matching parens
 (show-paren-mode t)
@@ -222,7 +224,7 @@ BUFFER may be either a buffer or its name (a string)."
 (setq Buffer-menu-sort-column 4)
 
 ;; Set indent highlights off
-(setq highlight-indentation-mode t)
+(setq highlight-indentation-mode nil)
 
 ;; Set backup and autosave directories to stop cluttering working directories
 (setq backup-directory-alist '((".*" . "~/.emacs.d/backup")))
@@ -233,7 +235,7 @@ BUFFER may be either a buffer or its name (a string)."
 (setq auto-save-file-name-transforms
       '((".*" "~/.emacs.d/autosave/" t)))
 
-;; Do some ibuffer modifications
+;; Set headings and group buffers within ibuffer
 (setq ibuffer-show-empty-filter-groups nil)
 (setq ibuffer-saved-filter-groups
     '(("home"
@@ -263,8 +265,8 @@ BUFFER may be either a buffer or its name (a string)."
 	  '(lambda ()
 	     (ibuffer-auto-mode 1)
 	     (ibuffer-switch-to-saved-filter-groups "home")))
-        
-;; nearly all of this is the default layout
+
+;; Increase ibuffer column widths to accompany long file paths
 (setq ibuffer-formats 
       '((mark modified read-only " "
               (name 35 35 :left :elide) ; change: 30s were originally 18s
@@ -276,6 +278,25 @@ BUFFER may be either a buffer or its name (a string)."
         (mark " "
               (name 16 -1)
               " " filename)))
+
+(defun kill-buffer-and-its-windows (buffer)
+  "Kill BUFFER and delete its windows.  Default is `current-buffer'.
+BUFFER may be either a buffer or its name (a string)."
+  (interactive (list (read-buffer "Kill buffer: " (current-buffer) 'existing)))
+  (setq buffer  (get-buffer buffer))
+  (if (buffer-live-p buffer)            ; Kill live buffer only.
+      (let ((wins  (get-buffer-window-list buffer nil t))) ; On all frames.
+        (when (and (buffer-modified-p buffer)
+                   (fboundp '1on1-flash-ding-minibuffer-frame))
+          (1on1-flash-ding-minibuffer-frame t)) ; Defined in `oneonone.el'.
+        (when (kill-buffer buffer)      ; Only delete windows if buffer killed.
+          (dolist (win  wins)           ; (User might keep buffer if modified.)
+            (when (window-live-p win)
+              ;; Ignore error, in particular,
+              ;; "Attempt to delete the sole visible or iconified frame".
+              (condition-case nil (delete-window win) (error nil))))))
+    (when (interactive-p)
+      (error "Cannot kill buffer.  Not a live buffer: `%s'" buffer))))
 
 ;; ;; Adds functionality to ibuffer for grouping buffers by their TRAMP
 ;; ;; connection.
