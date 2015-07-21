@@ -307,29 +307,29 @@ BUFFER may be either a buffer or its name (a string)."
     (when (interactive-p)
       (error "Cannot kill buffer.  Not a live buffer: `%s'" buffer))))
 
-;; ;; Adds functionality to ibuffer for grouping buffers by their TRAMP
-;; ;; connection.
-;; ;;
-;; ;;; Use:
-;; ;;
-;; ;; To group buffers by TRAMP connection:
-;; ;;
-;; ;;   M-x ibuffer-tramp-set-filter-groups-by-tramp-connection
-;; ;;
-;; ;; or, make this the default:
-;; ;;
-;; ;;   (add-hook 'ibuffer-hook
-;; ;;     (lambda ()
-;; ;;       (ibuffer-tramp-set-filter-groups-by-tramp-connection)
-;; ;;       (ibuffer-do-sort-by-alphabetic)))
-;; ;;
-;; ;; Alternatively, use `ibuffer-tramp-generate-filter-groups-by-tramp-connection'
-;; ;; to programmatically obtain a list of filter groups that you can
-;; ;; combine with your own custom groups.
-;; ;;
-;; ;;; Code:
+;; Adds functionality to ibuffer for grouping buffers by their TRAMP
+;; connection.
+;;
+;;; Use:
+;;
+;; To group buffers by TRAMP connection:
+;;
+;;   M-x ibuffer-tramp-set-filter-groups-by-tramp-connection
+;;
+;; or, make this the default:
+;;
+;;   (add-hook 'ibuffer-hook
+;;     (lambda ()
+;;       (ibuffer-tramp-set-filter-groups-by-tramp-connection)
+;;       (ibuffer-do-sort-by-alphabetic)))
+;;
+;; Alternatively, use `ibuffer-tramp-generate-filter-groups-by-tramp-connection'
+;; to programmatically obtain a list of filter groups that you can
+;; combine with your own custom groups.
+;;
+;;; Code:
 
-;; ;; requires
+;; requires
 
 ;; (require 'ibuffer)
 ;; (require 'ibuf-ext)
@@ -371,8 +371,7 @@ BUFFER may be either a buffer or its name (a string)."
 ;;   (ibuffer-update nil t))
 
 ;; (provide 'ibuffer-tramp)
-;; ;
-                                        ; ibuffer-tramp.el ends here
+;; ibuffer-tramp.el ends here
 
 
 ;; do dome Helm configuration
