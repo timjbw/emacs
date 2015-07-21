@@ -69,8 +69,6 @@
  '(custom-safe-themes
         (quote
          ("08efabe5a8f3827508634a3ceed33fa06b9daeef9c70a24218b70494acdf7855" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bac3f5378bc938e96315059cd0488d6ef7a365bae73dac2ff6698960df90552d" "1934bf7e1713bf706a9cb36cc6a002741773aa42910ca429df194d007ee05c67" "7dd515d883520286fc8936ce32381fb01b978d0d7cfb6fe56f7f55d8accbf63a" "49eea2857afb24808915643b1b5bd093eefb35424c758f502e98a03d0d3df4b1" "2a12e95e9ee6ed57592e7df12f3f028205575e9b3affdb5e6fa589421c618136" "62c9339d5cac3a49688abb34e98f87a6ee82003a11251f12e0ada1788090c40f" "ace9f12e0c00f983068910d9025eefeb5ea7a711e774ee8bb2af5f7376018ad2" default)))
- '(evernote-developer-token
-        "S=s132:U=120edf9:E=155e34130b2:C=14e8b9003a0:P=1cd:A=en-devtoken:V=2:H=ec5fb71b9bf4fe458050dbbb11c6cfdf")
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(minimap-highlight-line nil)
  '(minimap-window-location (quote right))
