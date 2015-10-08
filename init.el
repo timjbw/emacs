@@ -4,17 +4,39 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-;; Set safe themes
-(setq custom-safe-themes t)
-(load-theme 'twilight t)
-;;(load-theme 'ample-flat t)
-;;(load-theme 'gotham t)
-
 ;; Add a few custom directories
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
 (add-to-list 'load-path "~/.emacs.d/ext/")
 (add-to-list 'load-path "~/.emacs.d/evil/")
+
+(require 'weatherline-mode)
+
+;; Set safe themes
+(setq custom-safe-themes t)
+;;(load-theme 'twilight t)
+;;(load-theme 'ample-flat t)
+;;(load-theme 'gotham t)
+
+(add-hook 'after-init-hook 'my-after-init-hook)
+(defun my-after-init-hook ()
+  ;; do things after package initialization
+  (load-theme 'twilight t))
+
+;; Start Emacs maximised
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("51e228ffd6c4fff9b5168b31d5927c27734e82ec61f414970fc6bcce23bc140d" "08efabe5a8f3827508634a3ceed33fa06b9daeef9c70a24218b70494acdf7855" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bac3f5378bc938e96315059cd0488d6ef7a365bae73dac2ff6698960df90552d" "1934bf7e1713bf706a9cb36cc6a002741773aa42910ca429df194d007ee05c67" "7dd515d883520286fc8936ce32381fb01b978d0d7cfb6fe56f7f55d8accbf63a" "49eea2857afb24808915643b1b5bd093eefb35424c758f502e98a03d0d3df4b1" "2a12e95e9ee6ed57592e7df12f3f028205575e9b3affdb5e6fa589421c618136" "62c9339d5cac3a49688abb34e98f87a6ee82003a11251f12e0ada1788090c40f" "ace9f12e0c00f983068910d9025eefeb5ea7a711e774ee8bb2af5f7376018ad2" default)))
+ '(initial-frame-alist (quote ((fullscreen . maximized)))))
+;'(minimap-highlight-line nil)
+;'(minimap-window-location (quote right))
+
 
 ;; Load packages and initial config
 
@@ -25,7 +47,7 @@
 (package-initialize)
 (elpy-enable)
 
-;; Fix elpy keybindings
+;;Fix elpy keybindings
 (define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
 (define-key global-map (kbd "C-c #") 'iedit-mode)
 
@@ -38,12 +60,12 @@
 
 ;; Removed evernote dev toekn from init.el, so check token is set when startint evernote-mode
 ;; dev token is set in emacs-tips.org
-(defun test-evernote-dev-token()
-  "Check whether an Evernote developer token is set when starting evernote-mode"
-  (when (eq major-mode 'evernote-mode)
-    (unless (boundp 'evernote-developer-token)
-      (progn
-        (message "Evernote developer token not set!")))))
+ (defun test-evernote-dev-token()
+   "Check whether an Evernote developer token is set when starting evernote-mode"
+   (when (eq major-mode 'evernote-mode)
+     (unless (boundp 'evernote-developer-token)
+       (progn
+         (message "Evernote developer token not set!")))))
 
 (add-hook 'evernote-mode 'test-evernote-dev-token)
 
@@ -62,33 +84,19 @@
 
 ;;(nyan-mode 1)
 
-(minimap-mode 1)
+;;(minimap-mode 1)
 
 
 ;;Set tabstops
 (setq-default tab-width 4 indent-tabs-mode nil)
-;;(setq-default indent-tabs-mode nil)
-;;(setq-default tab-width 4)
-;;(setq indent-line-function 'insert-tab)
-
-;; Start Emacs maximised
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-        (quote
-         ("08efabe5a8f3827508634a3ceed33fa06b9daeef9c70a24218b70494acdf7855" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bac3f5378bc938e96315059cd0488d6ef7a365bae73dac2ff6698960df90552d" "1934bf7e1713bf706a9cb36cc6a002741773aa42910ca429df194d007ee05c67" "7dd515d883520286fc8936ce32381fb01b978d0d7cfb6fe56f7f55d8accbf63a" "49eea2857afb24808915643b1b5bd093eefb35424c758f502e98a03d0d3df4b1" "2a12e95e9ee6ed57592e7df12f3f028205575e9b3affdb5e6fa589421c618136" "62c9339d5cac3a49688abb34e98f87a6ee82003a11251f12e0ada1788090c40f" "ace9f12e0c00f983068910d9025eefeb5ea7a711e774ee8bb2af5f7376018ad2" default)))
- '(initial-frame-alist (quote ((fullscreen . maximized))))
- '(minimap-highlight-line nil)
- '(minimap-window-location (quote right))
- '(nyan-mode t)
- '(org-mobile-directory "~/Dropbox/org")
- '(weatherline-location-id 2649800))
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq indent-line-function 'insert-tab)
+'(nyan-mode t)
+'(org-mobile-directory "~/Dropbox/org")
 
         
-;; Stop cursor from blinking
+;; ;; Stop cursor from blinking
 (blink-cursor-mode 0)
 
 ;; Disable startup message
@@ -98,7 +106,7 @@
 (setq initial-scratch-message "")
 
 ;; Set custom font
-(set-face-attribute 'default nil :height 100)
+(set-face-attribute 'default nil :height 105)
 
 
 ;;(setq x-gtk-use-system-tooltips nil)
@@ -122,7 +130,12 @@
  '(minimap-active-region-background ((t (:background "#222222")))))
 
 ;; Add line numbers
-(global-linum-mode t)
+(nlinum-mode t)
+;; (setq linum-format (lambda (line) (propertize
+;;                                    (format (let ((w (length (number-to-string
+;;                                                              (count-lines (point-min) (point-max))))))
+;;                                                         (concat "%" (number-to-string w) "d ")) line) 'face 'linum)))
+
 
 ;; Highlight current line
 (global-hl-line-mode t)
@@ -185,8 +198,13 @@
 (key-chord-mode 1)
 (key-chord-define evil-insert-state-map "';" 'evil-normal-state)
 
+;; Set up Avy key for Evil-mode
+(define-key evil-normal-state-map (kbd "f") 'beginning-of-line)
+(define-key evil-visual-state-map (kbd "f") 'beginning-of-line)
 
 ;; Reset some Evil bindings to Emacs bindings
+;;(define-key evil-normal-mode (kbd "ff") 'find)
+;; define f as avy / avy-zap to correlate with pentadactyl 'follow link'
 (define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
 (define-key evil-insert-state-map (kbd "C-a") 'beginning-of-line)
 (define-key evil-visual-state-map (kbd "C-a") 'beginning-of-line)
@@ -309,25 +327,25 @@ BUFFER may be either a buffer or its name (a string)."
 
 ;; Adds functionality to ibuffer for grouping buffers by their TRAMP
 ;; connection.
-;;
-;;; Use:
-;;
+
+;; Use:
+
 ;; To group buffers by TRAMP connection:
-;;
+
 ;;   M-x ibuffer-tramp-set-filter-groups-by-tramp-connection
-;;
+
 ;; or, make this the default:
-;;
+
 ;;   (add-hook 'ibuffer-hook
 ;;     (lambda ()
 ;;       (ibuffer-tramp-set-filter-groups-by-tramp-connection)
 ;;       (ibuffer-do-sort-by-alphabetic)))
-;;
+
 ;; Alternatively, use `ibuffer-tramp-generate-filter-groups-by-tramp-connection'
 ;; to programmatically obtain a list of filter groups that you can
 ;; combine with your own custom groups.
-;;
-;;; Code:
+
+;; Code:
 
 ;; requires
 
@@ -374,28 +392,28 @@ BUFFER may be either a buffer or its name (a string)."
 ;; ibuffer-tramp.el ends here
 
 
-;; do dome Helm configuration
+;; ;; do dome Helm configuration
 
-;;(require 'helm)
-;;(require 'helm-config)
+;; ;;(require 'helm)
+;; ;;(require 'helm-config)
 
-;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
-;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
-;;(global-set-key (kbd "C-c h") 'helm-command-prefix)
-;;(global-unset-key (kbd "C-x c"))
+;; ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+;; ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+;; ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+;; ;;(global-set-key (kbd "C-c h") 'helm-command-prefix)
+;; ;;(global-unset-key (kbd "C-x c"))
 
-;;(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-;;(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-;;(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+;; ;;(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+;; ;;(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+;; ;;(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
-;;(when (executable-find "curl")
-;;  (setq helm-google-suggest-use-curl-p t))
+;; ;;(when (executable-find "curl")
+;; ;;  (setq helm-google-suggest-use-curl-p t))
 
-;;(setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-;;      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-;;      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-;;      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-;;      helm-ff-file-name-history-use-recentf t)
-;;(helm-mode 1)
+;; ;;(setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+;; ;;      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+;; ;;      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+;; ;;      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+;; ;;      helm-ff-file-name-history-use-recentf t)
+;; ;;(helm-mode 1)
 
