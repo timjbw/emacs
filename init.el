@@ -1,5 +1,7 @@
 ;; Initial startup configuration
-;; Set up Emacs with no decorations
+
+;; Start Emacs maximised and with no decorations
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -10,30 +12,59 @@
 (add-to-list 'load-path "~/.emacs.d/ext/")
 (add-to-list 'load-path "~/.emacs.d/evil/")
 
-(require 'weatherline-mode)
-
 ;; Set safe themes
 (setq custom-safe-themes t)
-;;(load-theme 'twilight t)
-;;(load-theme 'ample-flat t)
-;;(load-theme 'gotham t)
 
 (add-hook 'after-init-hook 'my-after-init-hook)
 (defun my-after-init-hook ()
   ;; do things after package initialization
+  (require 'powerline)
+  (powerline-center-evil-theme)
   (load-theme 'twilight t))
 
-;; Start Emacs maximised
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(ansi-color-names-vector
+   ["#3C3836" "#FB4934" "#B8BB26" "#FABD2F" "#83A598" "#D3869B" "#8EC07C" "#EBDBB2"])
+ '(bongo-enabled-backends (quote (mplayer)))
  '(custom-safe-themes
    (quote
-    ("51e228ffd6c4fff9b5168b31d5927c27734e82ec61f414970fc6bcce23bc140d" "08efabe5a8f3827508634a3ceed33fa06b9daeef9c70a24218b70494acdf7855" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bac3f5378bc938e96315059cd0488d6ef7a365bae73dac2ff6698960df90552d" "1934bf7e1713bf706a9cb36cc6a002741773aa42910ca429df194d007ee05c67" "7dd515d883520286fc8936ce32381fb01b978d0d7cfb6fe56f7f55d8accbf63a" "49eea2857afb24808915643b1b5bd093eefb35424c758f502e98a03d0d3df4b1" "2a12e95e9ee6ed57592e7df12f3f028205575e9b3affdb5e6fa589421c618136" "62c9339d5cac3a49688abb34e98f87a6ee82003a11251f12e0ada1788090c40f" "ace9f12e0c00f983068910d9025eefeb5ea7a711e774ee8bb2af5f7376018ad2" default)))
- '(initial-frame-alist (quote ((fullscreen . maximized)))))
+    ("ca0ded1dd264eda215a721e5384d4cf0bb1a4554ba4a74a9e43d3cd036677315" "97f9438943105a17eeca9f1a1c4c946765e364957749e83047d6ee337b5c0a73" "fe6330ecf168de137bb5eddbf9faae1ec123787b5489c14fa5fa627de1d9f82b" "f99abfd9afc4cce46de08829a868026ccd9cf0655d3b67a4732834d7386c71e2" "ac5584b12254623419499c3a7a5388031a29be85a15fdef9b94df2292d3e2cbb" "4f5bb895d88b6fe6a983e63429f154b8d939b4a8c581956493783b2515e22d6d" "5d1434865473463d79ee0523c1ae60ecb731ab8d134a2e6f25c17a2b497dd459" "c016e9b59f3a5d4a2b61f6b3076f8517fd71455f1f4509ba3b6dae3ab1016eab" "ad950f1b1bf65682e390f3547d479fd35d8c66cafa2b8aa28179d78122faa947" "51e228ffd6c4fff9b5168b31d5927c27734e82ec61f414970fc6bcce23bc140d" "08efabe5a8f3827508634a3ceed33fa06b9daeef9c70a24218b70494acdf7855" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bac3f5378bc938e96315059cd0488d6ef7a365bae73dac2ff6698960df90552d" "1934bf7e1713bf706a9cb36cc6a002741773aa42910ca429df194d007ee05c67" "7dd515d883520286fc8936ce32381fb01b978d0d7cfb6fe56f7f55d8accbf63a" "49eea2857afb24808915643b1b5bd093eefb35424c758f502e98a03d0d3df4b1" "2a12e95e9ee6ed57592e7df12f3f028205575e9b3affdb5e6fa589421c618136" "62c9339d5cac3a49688abb34e98f87a6ee82003a11251f12e0ada1788090c40f" "ace9f12e0c00f983068910d9025eefeb5ea7a711e774ee8bb2af5f7376018ad2" default)))
+ '(fci-rule-color "#37474f")
+ '(hl-sexp-background-color "#1c1f26")
+ '(ido-vertical-mode t)
+ '(initial-frame-alist (quote ((fullscreen . maximized))))
+ '(nyan-mode t)
+ '(pos-tip-background-color "#36473A")
+ '(pos-tip-foreground-color "#FFFFC8")
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#f36c60")
+     (40 . "#ff9800")
+     (60 . "#fff59d")
+     (80 . "#8bc34a")
+     (100 . "#81d4fa")
+     (120 . "#4dd0e1")
+     (140 . "#b39ddb")
+     (160 . "#f36c60")
+     (180 . "#ff9800")
+     (200 . "#fff59d")
+     (220 . "#8bc34a")
+     (240 . "#81d4fa")
+     (260 . "#4dd0e1")
+     (280 . "#b39ddb")
+     (300 . "#f36c60")
+     (320 . "#ff9800")
+     (340 . "#fff59d")
+     (360 . "#8bc34a"))))
+ '(vc-annotate-very-old-color nil))
 ;'(minimap-highlight-line nil)
 ;'(minimap-window-location (quote right))
 
@@ -73,19 +104,15 @@
 ;; Make dired+ re-use buffer for visited directories
 (require 'dired+)
 (toggle-diredp-find-file-reuse-dir t)
-
         
 ;;(require 'epa-file)
 ;;(epa-file-enable)
 
-
 (global-set-key (kbd "C-x k") 'kill-buffer-and-its-windows)
 
+(nyan-mode t)
 
-;;(nyan-mode 1)
-
-;;(minimap-mode 1)
-
+(prettify-symbols-mode t)
 
 ;;Set tabstops
 (setq-default tab-width 4 indent-tabs-mode nil)
@@ -94,7 +121,6 @@
 (setq indent-line-function 'insert-tab)
 '(nyan-mode t)
 '(org-mobile-directory "~/Dropbox/org")
-
         
 ;; ;; Stop cursor from blinking
 (blink-cursor-mode 0)
@@ -108,7 +134,6 @@
 ;; Set custom font
 (set-face-attribute 'default nil :height 105)
 
-
 ;;(setq x-gtk-use-system-tooltips nil)
 
 ;; Set yes-no to y-n
@@ -119,8 +144,6 @@
                          ("marmalade" . "https://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 
-
-
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -130,7 +153,7 @@
  '(minimap-active-region-background ((t (:background "#222222")))))
 
 ;; Add line numbers
-(nlinum-mode t)
+;;(nlinum-mode t)
 ;; (setq linum-format (lambda (line) (propertize
 ;;                                    (format (let ((w (length (number-to-string
 ;;                                                              (count-lines (point-min) (point-max))))))
@@ -191,6 +214,7 @@
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode 1)
+(ido-vertical-mode 1)
 
 
 ;; Remap ESC to ';
@@ -199,8 +223,8 @@
 (key-chord-define evil-insert-state-map "';" 'evil-normal-state)
 
 ;; Set up Avy key for Evil-mode
-(define-key evil-normal-state-map (kbd "f") 'beginning-of-line)
-(define-key evil-visual-state-map (kbd "f") 'beginning-of-line)
+(define-key evil-normal-state-map (kbd "f") 'avy-goto-char-2)
+(define-key evil-visual-state-map (kbd "f") 'avy-goto-char-2)
 
 ;; Reset some Evil bindings to Emacs bindings
 ;;(define-key evil-normal-mode (kbd "ff") 'find)
@@ -216,13 +240,10 @@
 (setq evil-emacs-state-cursor '("darkorange" box))
 (setq evil-normal-state-cursor '("darkred" box))
 (setq evil-insert-state-cursor '("darkgreen" bar))
-;;rsetq evil-visual-state-cursor '("green" box))
+;;(setq evil-visual-state-cursor '("green" box))
 ;;(setq evil-replace-state-cursor '("red" bar))
 ;;(setq evil-operator-state-cursor '("red" hollow))
 
-
-;; Bind some avy keys
-(global-set-key (kbd "C-;") 'avy-goto-char-2)
 
 ;; Enable smoother scrolling
 (setq scroll-margin 5 scroll-conservatively 9999 scroll-step 5)
@@ -261,6 +282,13 @@
 (setq auto-save-list-file-prefix "~/.emacs.d/autosave/")
 (setq auto-save-file-name-transforms
       '((".*" "~/.emacs.d/autosave/" t)))
+
+;; Enable clipboard copypasta
+(setq x-select-enable-clipboard t)
+
+;; Set bindings for org-password-manager
+(add-hook 'org-mode-hook 'org-password-manager-key-bindings)
+(setq org-completion-use-ido t)
 
 ;; Set headings and group buffers within ibuffer
 (setq ibuffer-show-empty-filter-groups nil)
