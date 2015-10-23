@@ -22,6 +22,8 @@
   ;;(powerline-center-evil-theme)
   (load-theme 'twilight t))
 
+(setq twittering-icon-mode t)
+(setq twittering-use-icon-storage t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -113,7 +115,7 @@
 
 (nyan-mode t)
 
-(prettify-symbols-mode t)
+(prettify-symbols-mode)
 
 ;;Set tabstops
 (setq-default tab-width 4 indent-tabs-mode nil)
@@ -295,7 +297,7 @@
 (setq ibuffer-show-empty-filter-groups nil)
 (setq ibuffer-saved-filter-groups
     '(("home"
-        ("emacs-config" (or (filename . ".emacs.d")
+        ("Emacs" (or (filename . ".emacs.d")
                             (name . "\*scratch\*")
                             (name . "\*packages\*")
 		                    (filename . "emacs-config")))
@@ -313,6 +315,8 @@
 			        (mode . css-mode)))
 	 ("Magit" (name . "\*magit"))
 	 ("ERC" (mode . erc-mode))
+     ("Twitter" (mode . twittering-mode))
+     ("Config Files" (mode . "\*Conf\*"))
 	 ("Help" (or (name . "\*Help\*")
 		         (name . "\*Apropos\*")
 		         (name . "\*info\*"))))))
