@@ -38,10 +38,6 @@
 (setq browse-url-browser-function 'browse-url-generic browse-url-generic-program "chromium")
 
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default bold shadow italic underline bold bold-italic bold])
  '(ansi-color-names-vector
@@ -86,13 +82,8 @@
      (340 . "#fff59d")
      (360 . "#8bc34a"))))
  '(vc-annotate-very-old-color nil))
-;'(minimap-highlight-line nil)
-;'(minimap-window-location (quote right))
-
-(setq browse-url-browser-function 'browse-url-generic browse-url-generic-program "chromium")
 
 ;; Load packages and initial config
-
 (require 'package)
 (add-to-list 'package-archives
              '("elpy" . "http://jorgenschaefer.github.io/packages/"))
@@ -106,6 +97,9 @@
 
 (require 'evil)
 (evil-mode 1)
+
+;'(minimap-highlight-line nil)
+;'(minimap-window-location (quote right))
 
 ;; Load evernote-mode and map some keys
 (require 'evernote-mode)
@@ -428,96 +422,87 @@
 ;;     (when (interactive-p)
 ;;       (error "Cannot kill buffer.  Not a live buffer: `%s'" buffer))))
 
-;; Adds functionality to ibuffer for grouping buffers by their TRAMP
-;; connection.
+Make ibuffer group TRAMP bufffers
+  M-x ibuffer-tramp-set-filter-groups-by-tramp-connection
+or, make this the default:
 
-;; Use:
-
-;; To group buffers by TRAMP connection:
-
-;;   M-x ibuffer-tramp-set-filter-groups-by-tramp-connection
-
-;; or, make this the default:
-
-   ;; (add-hook 'ibuffer-hook
-   ;;   (lambda ()
-   ;;     (ibuffer-tramp-set-filter-groups-by-tramp-connection)
-   ;;     (ibuffer-do-sort-by-alphabetic)))
+   (add-hook 'ibuffer-hook
+     (lambda ()
+       (ibuffer-tramp-set-filter-groups-by-tramp-connection)
+       (ibuffer-do-sort-by-alphabetic)))
 
 ;; Alternatively, use `ibuffer-tramp-generate-filter-groups-by-tramp-connection'
 ;; to programmatically obtain a list of filter groups that you can
 ;; combine with your own custom groups.
 
-;; Code:
 
-;; requires
+(require 'ibuffer)
+(require 'ibuf-ext)
+(require 'tramp)
+(eval-when-compile
+  (require 'cl))
 
-;; (require 'ibuffer)
-;; (require 'ibuf-ext)
-;; (require 'tramp)
-;; (eval-when-compile
-;;   (require 'cl))
+(defun ibuffer-tramp-connection (buf)
+  "Return a cons cell (method . host), or nil if the file is not
+using a TRAMP connection"
+  (let ((file-name (with-current-buffer buf (or buffer-file-name default-directory))))
+    (when (tramp-tramp-file-p file-name)
+      (let ((method (tramp-file-name-method (tramp-dissect-file-name file-name)))
+	    (host (tramp-file-name-host (tramp-dissect-file-name file-name))))
+	(cons method host)))))
 
-;; (defun ibuffer-tramp-connection (buf)
-;;   "Return a cons cell (method . host), or nil if the file is not
-;; using a TRAMP connection"
-;;   (let ((file-name (with-current-buffer buf (or buffer-file-name default-directory))))
-;;     (when (tramp-tramp-file-p file-name)
-;;       (let ((method (tramp-file-name-method (tramp-dissect-file-name file-name)))
-;; 	    (host (tramp-file-name-host (tramp-dissect-file-name file-name))))
-;; 	(cons method host)))))
+;;;###autoload
+(defun ibuffer-tramp-generate-filter-groups-by-tramp-connection ()
+  "Create a set of ibuffer filter groups based on the TRAMP connection of buffers"
+  (let ((roots (ibuffer-remove-duplicates
+                (delq nil (mapcar 'ibuffer-tramp-connection (buffer-list))))))
+    (mapcar (lambda (tramp-connection)
+              (cons (format "%s:%s" (car tramp-connection) (cdr tramp-connection))
+                    `((tramp-connection . ,tramp-connection))))
+            roots)))
 
-;; ;;;###autoload
-;; (defun ibuffer-tramp-generate-filter-groups-by-tramp-connection ()
-;;   "Create a set of ibuffer filter groups based on the TRAMP connection of buffers"
-;;   (let ((roots (ibuffer-remove-duplicates
-;;                 (delq nil (mapcar 'ibuffer-tramp-connection (buffer-list))))))
-;;     (mapcar (lambda (tramp-connection)
-;;               (cons (format "%s:%s" (car tramp-connection) (cdr tramp-connection))
-;;                     `((tramp-connection . ,tramp-connection))))
-;;             roots)))
+(define-ibuffer-filter tramp-connection
+    "Toggle current view to buffers with TRAMP connection QUALIFIER."
+  (:description "TRAMP connection"
+                :reader (read-from-minibuffer "Filter by TRAMP connection (regexp): "))
+  (ibuffer-awhen (ibuffer-tramp-connection buf)
+    (equal qualifier it)))
 
-;; (define-ibuffer-filter tramp-connection
-;;     "Toggle current view to buffers with TRAMP connection QUALIFIER."
-;;   (:description "TRAMP connection"
-;;                 :reader (read-from-minibuffer "Filter by TRAMP connection (regexp): "))
-;;   (ibuffer-awhen (ibuffer-tramp-connection buf)
-;;     (equal qualifier it)))
+;;;###autoload
+(defun ibuffer-tramp-set-filter-groups-by-tramp-connection ()
+  "Set the current filter groups to filter by TRAMP connection."
+  (interactive)
+  (setq ibuffer-filter-groups (ibuffer-tramp-generate-filter-groups-by-tramp-connection))
+  (ibuffer-update nil t))
 
-;; ;;;###autoload
-;; (defun ibuffer-tramp-set-filter-groups-by-tramp-connection ()
-;;   "Set the current filter groups to filter by TRAMP connection."
-;;   (interactive)
-;;   (setq ibuffer-filter-groups (ibuffer-tramp-generate-filter-groups-by-tramp-connection))
-;;   (ibuffer-update nil t))
-
-;; (provide 'ibuffer-tramp)
-
-;;ibuffer-tramp.el ends here
+(provide 'ibuffer-tramp)
 
 
-;; ;; do dome Helm configuration
+;;
+;; -- Replaced Helm with Ido --
+;;
+;; do dome Helm configuration
 
-;; ;;(require 'helm)
-;; ;;(require 'helm-config)
+;;(require 'helm)
+;;(require 'helm-config)
 
-;; ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-;; ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
-;; ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
-;; ;;(global-set-key (kbd "C-c h") 'helm-command-prefix)
-;; ;;(global-unset-key (kbd "C-x c"))
+;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+;;(global-set-key (kbd "C-c h") 'helm-command-prefix)
+;;(global-unset-key (kbd "C-x c"))
 
-;; ;;(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-;; ;;(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-;; ;;(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+;;(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+;;(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+;;(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
-;; ;;(when (executable-find "curl")
-;; ;;  (setq helm-google-suggest-use-curl-p t))
+;;(when (executable-find "curl")
+;;  (setq helm-google-suggest-use-curl-p t))
 
-;; ;;(setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-;; ;;      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-;; ;;      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-;; ;;      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-;; ;;      helm-ff-file-name-history-use-recentf t)
-;; ;;(helm-mode 1)
+;;(setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+;;      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+;;      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+;;      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+;;      helm-ff-file-name-history-use-recentf t)
+;;(helm-mode 1)
 
