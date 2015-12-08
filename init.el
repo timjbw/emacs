@@ -22,11 +22,12 @@
   ;;(powerline-center-evil-theme)
   (load-theme 'twilight t))
 
-;; Configure twittering-mode
-(twit)
-(setq twittering-icon-mode t)
-(setq twittering-use-icon-storage t)
-(twittering-enable-unread-status-notifier)
+;; Twittering mode
+;; (require 'twittering-mode)
+;; (setq twittering-use-master-password t)
+;; (setq twittering-icon-mode t);
+;; (setq twittering-use-icon-storage t)
+;; (twittering-enable-unread-status-notifier)
 
 ;; Configure smart-powerline
 ;(smart-mode-line-enable)
@@ -57,6 +58,12 @@
  '(nyan-mode t)
  '(pos-tip-background-color "#36473A")
  '(pos-tip-foreground-color "#FFFFC8")
+ '(safe-local-variable-values
+   (quote
+    ((eval when
+           (fboundp
+            (quote rainbow-mode))
+           (rainbow-mode 1)))))
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
    (quote
@@ -115,15 +122,56 @@
 
 (add-hook 'evernote-mode 'test-evernote-dev-token)
 
+;; Set the frame title to the current buffer
+;; (setq frame-title-format
+;;   '("" invocation-name ": "(:eval (if (buffer-file-name)
+;;                 (abbreviate-file-name (buffer-file-name))
+;;                  "%b"))))
+
+;; Just make the frame title 'emacs'
+(setq frame-title-format (invocation-name))
+
+
+;; (defun file-string (file)
+;;   "Read the contents of a file and return as a string."
+;;   (with-temp-buffer
+;;     (insert-file-contents file)
+;;     (buffer-string)))
+
+;; (defun now-playing
+;;     (interactive)
+;;     (file-string "~/.moc/now_playing.txt"))
+
+;; (define-key global-map (kbd "C-c C-n") 'now-playing)
+
+(setq frame-title-format "emacs")
+
+    
+;; Display COPU load, date and time in mode bar
+(defface egoge-display-time
+  '((((type x w32 mac))
+     ;; #060525 is the background colour of my default face.
+     (:foreground "#060525" :inherit bold))
+    (((type tty))
+     (:foreground "blue")))
+  "Face used to display the time in the mode line.")
+
+;; This causes the current time in the mode line to be displayed in
+;; `egoge-display-time-face' to make it stand out visually.
+ (setq display-time-string-forms
+       '((propertize (concat "[" load "]" " " day "/" month "/"
+                             (substring year -2) " " 24-hours ":" minutes " ")
+                     'face 'egoge-display-time)))
+(display-time-mode t)
 
 ;; Make dired+ re-use buffer for visited directories
 (require 'dired+)
+
 (toggle-diredp-find-file-reuse-dir t)
         
 ;;(require 'epa-file)
 ;;(epa-file-enable)
 
-(global-set-key (kbd "C-x k") 'kill-buffer-and-its-windows)
 
 ;(nyan-mode t)
 
@@ -156,7 +204,7 @@
 
 ;; Set package archives
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "https://marmalade-repo.org/packages/")
+;; removed               ("marmalade" . "https://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 
 (custom-set-faces
@@ -164,8 +212,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(hackernews-link-face ((t (:foreground "dark orange"))))
  '(hl-line ((t (:inherit highlight :background "gray15"))))
- '(minimap-active-region-background ((t (:background "#222222")))))
+ '(minimap-active-region-background ((t (:background "#222222"))))
+ '(sml/filename ((t (:inherit sml/global :foreground "RoyalBlue4" :weight bold)))))
 
 ;; Add line numbers
 ;;(nlinum-mode t)
@@ -191,10 +241,12 @@
 
 (global-set-key (kbd "C-x l") 'windmove-right)
 (global-set-key (kbd "C-x h") 'windmove-left)
-(global-set-key (kbd "C-x k")    'windmove-up)
-(global-set-key (kbd "C-x j")  'windmove-down)
+(global-set-key (kbd "C-x k") 'windmove-up)
+(global-set-key (kbd "C-x j") 'windmove-down)
 ;; Rebind the rebound C-x h to C-x a to mark-whole-buffer    
 (global-set-key (kbd "C-x a")  'mark-whole-buffer)
+
+(global-set-key (kbd "C-x k") 'kill-buffer-and-window)
 
 ;; Set keys for scrolling one page up and down
 (global-set-key (kbd "C-<up>") 'scroll-down-command)
@@ -235,7 +287,11 @@
 ;; Remap ESC to ';
 (setq key-chord-two-keys-delay 0.5)
 (key-chord-mode 1)
+
+;; if evil-insert-state-p then
 (key-chord-define evil-insert-state-map "';" 'evil-normal-state)
+;; else
+;;(key-chord-define evil-insert-state-map "';" 'evil-insert-state)
 
 ;; Set up Avy key for Evil-mode
 (define-key evil-normal-state-map (kbd "f") 'avy-goto-char-2)
@@ -320,7 +376,7 @@
      ("Python" (or (mode . python-mode)
                    (name . "\*Python\*")))
      ("Ruby" (mode . ruby-mode))
-     ("Shell" (mode . shell-script-mode))
+     ("Shell" (mode . Shell-script)) ;;("Elisp" (filename . "\*.el"))
 	 ("Web Dev" (or (mode . html-mode)
                     (mode . markdown-mode)
                     (mode . php-mode)
@@ -328,7 +384,9 @@
 	 ("Magit" (name . "\*magit"))
 	 ("ERC" (mode . erc-mode))
      ("Twitter" (mode . twittering-mode))
-     ("Config Files" (mode . "\*Conf\*"))
+     ("Reddit" (name . "\*Reddit\*"))
+     ("Config" (filename . "\*conf\*"))
+     ("Hackernews" (name . "\*hackernews\*"))
 	 ("Help" (or (name . "\*Help\*")
 		         (name . "\*Apropos\*")
 		         (name . "\*info\*"))))))
@@ -351,24 +409,24 @@
               (name 16 -1)
               " " filename)))
 
-(defun kill-buffer-and-its-windows (buffer)
-  "Kill BUFFER and delete its windows.  Default is `current-buffer'.
-BUFFER may be either a buffer or its name (a string)."
-  (interactive (list (read-buffer "Kill buffer: " (current-buffer) 'existing)))
-  (setq buffer  (get-buffer buffer))
-  (if (buffer-live-p buffer)            ; Kill live buffer only.
-      (let ((wins  (get-buffer-window-list buffer nil t))) ; On all frames.
-        (when (and (buffer-modified-p buffer)
-                   (fboundp '1on1-flash-ding-minibuffer-frame))
-          (1on1-flash-ding-minibuffer-frame t)) ; Defined in `oneonone.el'.
-        (when (kill-buffer buffer)      ; Only delete windows if buffer killed.
-          (dolist (win  wins)           ; (User might keep buffer if modified.)
-            (when (window-live-p win)
-              ;; Ignore error, in particular,
-              ;; "Attempt to delete the sole visible or iconified frame".
-              (condition-case nil (delete-window win) (error nil))))))
-    (when (interactive-p)
-      (error "Cannot kill buffer.  Not a live buffer: `%s'" buffer))))
+;; (defun kill-buffer-and-its-windows (buffer))
+;;   "Kill BUFFER and delete its windows.  Default is `current-buffer'.
+;; BUFFER may be either a buffer or its name (a string)."
+;;   (interactive (list (read-buffer "Kill buffer: " (current-buffer) 'existing)))
+;;   (setq buffer  (get-buffer buffer))
+;;   (if (buffer-live-p buffer)            ; Kill live buffer only.
+;;       (let ((wins  (get-buffer-window-list buffer nil t))) ; On all frames.
+;;         (when (and (buffer-modified-p buffer)
+;;                    (fboundp '1on1-flash-ding-minibuffer-frame))
+;;           (1on1-flash-ding-minibuffer-frame t)) ; Defined in `oneonone.el'.
+;;         (when (kill-buffer buffer)      ; Only delete windows if buffer killed.
+;;           (dolist (win  wins)           ; (User might keep buffer if modified.)
+;;             (when (window-live-p win)
+;;               ;; Ignore error, in particular,
+;;               ;; "Attempt to delete the sole visible or iconified frame".
+;;               (condition-case nil (delete-window win) (error nil))))))
+;;     (when (interactive-p)
+;;       (error "Cannot kill buffer.  Not a live buffer: `%s'" buffer))))
 
 ;; Adds functionality to ibuffer for grouping buffers by their TRAMP
 ;; connection.
@@ -381,10 +439,10 @@ BUFFER may be either a buffer or its name (a string)."
 
 ;; or, make this the default:
 
-;;   (add-hook 'ibuffer-hook
-;;     (lambda ()
-;;       (ibuffer-tramp-set-filter-groups-by-tramp-connection)
-;;       (ibuffer-do-sort-by-alphabetic)))
+   ;; (add-hook 'ibuffer-hook
+   ;;   (lambda ()
+   ;;     (ibuffer-tramp-set-filter-groups-by-tramp-connection)
+   ;;     (ibuffer-do-sort-by-alphabetic)))
 
 ;; Alternatively, use `ibuffer-tramp-generate-filter-groups-by-tramp-connection'
 ;; to programmatically obtain a list of filter groups that you can
@@ -434,7 +492,8 @@ BUFFER may be either a buffer or its name (a string)."
 ;;   (ibuffer-update nil t))
 
 ;; (provide 'ibuffer-tramp)
-;; ibuffer-tramp.el ends here
+
+;;ibuffer-tramp.el ends here
 
 
 ;; ;; do dome Helm configuration
