@@ -1,6 +1,6 @@
 ;; Initial startup configuration
 
-;; Start Emacs maximised and with no decorations
+;; Start Emacs maximised and with no decorations.
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (menu-bar-mode -1)
 (tool-bar-mode -1)
