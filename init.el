@@ -105,7 +105,7 @@
 (require 'evernote-mode)
 (define-key global-map (kbd "C-c C-e") 'evernote-browsing-list-notebooks)
 
-;; Removed evernote dev toekn from init.el, so check token is set when startint evernote-mode
+;; Removed evernote dev token from init.el, so check token is set when starting evernote-mode
 ;; dev token is set in emacs-tips.org
  (defun test-evernote-dev-token()
    "Check whether an Evernote developer token is set when starting evernote-mode"
@@ -153,7 +153,7 @@
 ;; This causes the current time in the mode line to be displayed in
 ;; `egoge-display-time-face' to make it stand out visually.
  (setq display-time-string-forms
-       '((propertize (concat "[" load "]" " " day "/" month "/"
+       '((propertize (concat  load " " day "/" month "/"
                              (substring year -2) " " 24-hours ":" minutes " ")
                      'face 'egoge-display-time)))
 (display-time-mode t)
@@ -223,8 +223,8 @@
 (global-hl-line-mode t)
 
 ;; Add keys for clipboard
-(global-set-key (kbd "C-x c y") 'clipboard-yank)
-(global-set-key (kbd "C-x c w") 'clipboard-kill-ring-save)
+(global-set-key (kbd "C-c c y") 'clipboard-yank)
+(global-set-key (kbd "C-c c w") 'clipboard-kill-ring-save)
 
 ;; Set keys for moving between windows
 
